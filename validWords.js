@@ -1,4 +1,4 @@
-module.exports = [
+export const validWords = [
     "aahed",
     "aalii",
     "aapas",
@@ -14853,5 +14853,5 @@ module.exports = [
     "zygal",
     "zygon",
     "zymes",
-    "zymic"
-]
+    "zymic",
+];

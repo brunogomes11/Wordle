@@ -7,6 +7,7 @@ body {
     background-color: #333;
     display: flex;
     flex-direction: column;
+    align-items: center;
     min-height: 100%;
     margin: 0;
     padding: 1em;
@@ -16,40 +17,72 @@ h1 {
     color: white;
 }
 
-#main-game {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-#words-section {
-    width: 450px;
-    height: 450px;
-    border: 2px solid brown;
+#board {
     margin-bottom: 20px;
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
-}
-
-.letter-container {
-    border: 2px solid blueviolet;
-    width: 60px;
-    height: 60px;
-    font-size: 45px;
-    color: white;
-    text-align: center;
 }
 
 .row {
     display: flex;
-    gap: 15px;
-    justify-content: center;
+    gap: 10px;
     margin: 5px auto;
+}
+
+.tile {
+    border: 1px solid rgb(20, 19, 19);
+    text-transform: uppercase;
+    width: 60px;
+    height: 60px;
+    font-size: 45px;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gray {
+    background-color: #ccc;
+}
+
+.green {
+    background-color: green;
+}
+
+.yellow {
+    background-color: rgb(197, 197, 29);
+}
+
+.blue {
+    background-color: blue;
+}
+
+#input-section {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+    margin-top: 50px;
+}
+
+#input {
+    font-size: 20px;
+    text-transform: uppercase;
+    border: 1px solid black;
+}
+
+#countdown {
+    color: white;
+    display: inline-flex;
+    font-size: 50px;
+    height: 70px;
+    width: 200px;
+    align-items: center;
+    justify-content: center;
+    margin: 0;
 }
 
 /* KEYBOARD */
 
-.keyboard {
+/* .keyboard {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -90,4 +123,4 @@ h1 {
 }
 #special:hover {
     background-color: #333;
-}
+} */
