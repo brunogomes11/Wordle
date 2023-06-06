@@ -140,17 +140,18 @@ function matchWord(guessArray) {
         }
     });
 
+    chances++;
+
     //Create a variable to check if all the tiles has the green class
     const isRowGreen = rowTiles.every((tile) =>
         tile.classList.contains("green")
     );
     //if all the letters has the green tiles then the player win
+
     if (isRowGreen) {
         alert("you win");
         resetGame();
     }
-
-    chances++;
 }
 
 // ####### TIMER #######
@@ -218,12 +219,15 @@ function resetGame() {
         const rowArray = Array.from(row.children);
         rowArray.forEach((tile) => {
             tile.textContent = "";
-            tile.classList.remove("green", "yellow");
+            tile.classList.remove("green", "yellow", "blue");
         });
     });
 
     hintUsedRows = [];
     displayedHintLetters = [];
+
+    //Clear the time, so it does not run twice
+    clearInterval(timeInterval);
 
     // Start the countdown again
     time = startingTime * 60;
