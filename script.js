@@ -16,7 +16,6 @@ let currentLetterIndex = 0;
 
 // Assign a variable to generate a random word
 let secretWord = randomWord();
-
 console.log(secretWord);
 
 //Create an array to track one hint per row
@@ -31,6 +30,13 @@ hintButton.addEventListener("click", function () {
     if (!hintUsedRows.includes(currentRowIndex)) {
         // Create an array to store the available hint letters
         const availableHintLetters = [];
+
+        //I NEED TO MAKE TO ONLY SHOW LETTERS THAT DOES NOT HAVE GREEN OR YELLOW
+        // Array.from(rows.children.contains("green yellow")).INNERTEXT OR .TEXTCONTENT
+
+        const notHint = rows[currentRowIndex - 1].children;
+        const test = notHint.classList.contains("yellow");
+        console.log(test);
 
         // Loop through the secret word and add unique letters to the availableHintLetters array
         for (let i = 0; i < secretWord.length; i++) {
@@ -69,12 +75,6 @@ guessButton.addEventListener("click", function () {
     //Get the input value, make uppercase and split the word to create an array with each letter
     let guess = input.value.toUpperCase().split("");
 
-    // Remove the blue class from the previously selected random tile
-    const blueTile = rows[currentRowIndex].querySelector(".blue");
-    if (blueTile) {
-        blueTile.classList.remove("blue");
-    }
-
     //if the player try more than 6 times, the game is over
     if (chances < 6) {
         //if the players has less than 6 tries, then compare the lenght of the guess word, and make sure its is = to 5
@@ -82,6 +82,11 @@ guessButton.addEventListener("click", function () {
             //if it is igual to 5, then display the guess on the tiles, clear the input and match the word with the right color
             //Check if the guessed word is a valid word
             if (validWords.includes(guess.join("").toLowerCase())) {
+                // Remove the blue class from the previously selected random tile
+                const blueTile = rows[currentRowIndex].querySelector(".blue");
+                if (blueTile) {
+                    blueTile.classList.remove("blue");
+                }
                 displayGuess(guess);
                 input.value = "";
                 matchWord(guess);
@@ -246,12 +251,14 @@ function resetGame() {
 /*
 NOTES:
 
-1- When I reset my game, the next time the color class is starting at row index 1, not 0 
+1- Implement a box display (dialog) instead of alert 
 
-2- Implement a box display instead of alert 
+2-Implement the keyboard
 
-3-Sync the timer with the game 
+3-If word already displayed, dont let the player input again
 
-4-Implement the keyboard
+4- if the letter is green or yellow, then do not show on Hint
+
+5- Implement a good css timer
 
 */

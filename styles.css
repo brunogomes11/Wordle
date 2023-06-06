@@ -71,13 +71,13 @@ h1 {
 
 #timer {
     color: white;
-    display: inline-flex;
+    display: flex;
     font-size: 50px;
     height: 70px;
     width: 200px;
     align-items: center;
     justify-content: center;
-    margin: 0;
+    margin: auto;
 }
 
 /* KEYBOARD */
