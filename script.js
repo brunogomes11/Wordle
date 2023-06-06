@@ -1,31 +1,11 @@
 import { answers } from "./answers.js";
 import { validWords } from "./validWords.js";
 
-//Get elements
+// ######## ELEMENTS #########
 const rows = document.querySelectorAll(".row");
 const input = document.getElementById("input");
-const button = document.getElementById("guessBtn");
+const guessButton = document.getElementById("guessBtn");
 const hintButton = document.getElementById("hintBtn");
-
-// ####### TIMER #######
-
-const startingTime = 1;
-let time = startingTime * 60;
-
-const countdown = document.getElementById("countdown");
-
-setInterval(updateCountdown, 1000);
-
-function updateCountdown() {
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
-
-    seconds = seconds < 10 ? "0" + seconds : seconds;
-
-    countdown.innerHTML = `${minutes}:${seconds}`;
-
-    time--;
-}
 
 //Create a variable to start the chances at 0, and then build it up as the players keeps trying different words
 let chances = 0;
@@ -45,7 +25,7 @@ let hintUsedRows = [];
 // Add an array to track the letters that have already been displayed as hints
 let displayedHintLetters = [];
 
-// Add an event listener to the hint button
+// ######## HINT BUTTON #########
 hintButton.addEventListener("click", function () {
     // Check if hint has already been used for the current row
     if (!hintUsedRows.includes(currentRowIndex)) {
@@ -83,8 +63,9 @@ hintButton.addEventListener("click", function () {
     }
 });
 
-//When the button is pressed, get the input and make if statements to start playing the game
-button.addEventListener("click", function () {
+// ######## GUESS BUTTON #########
+guessButton.addEventListener("click", function () {
+    //When the button is pressed, get the input and make if statements to start playing the game
     //Get the input value, make uppercase and split the word to create an array with each letter
     let guess = input.value.toUpperCase().split("");
 
@@ -119,8 +100,9 @@ button.addEventListener("click", function () {
     }
 });
 
-//Create a display guess function that takes the guess input from the player
+// ######## DISPLAY GUESS ON TILES #########
 function displayGuess(guessArray) {
+    //Create a display guess function that takes the guess input from the player
     //Loop through the guess word, and for each letter, assign it to the tile, increment the tile index to jump to the next one each time of the loop
     guessArray.forEach((letter) => {
         //rows element, incrementing every time the loop runs, passing the children element (tile) and increment as well, and asign the letter
@@ -132,8 +114,9 @@ function displayGuess(guessArray) {
     currentRowIndex++;
 }
 
-//Create a function to match the word with the colors
+// ######## MATCH WORDS WITH COLORS #########
 function matchWord(guessArray) {
+    //Create a function to match the word with the colors
     //Create a variable to pass the secret word, make it upper case and split into an array
     const answerArray = secretWord.toUpperCase().split("");
 
@@ -170,11 +153,61 @@ function matchWord(guessArray) {
     chances++;
 }
 
-//Create a function to take a random word from answers array
+// ####### TIMER #######
+const startingTime = 1;
+//Convert the time to seconds
+let time = startingTime * 60;
+
+//Get the element timer
+const countdown = document.getElementById("timer");
+
+//Update the timer every second and store the interval time
+let timeInterval = setInterval(updateTimer, 1000);
+
+//Function called every second by setInterval
+function updateTimer() {
+    //Calculate the time
+    const minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    //Formatting to seconds less than 10 have a zero for better visual representation
+    seconds = seconds < 10 ? "0" + seconds : seconds;
+
+    //If the time reach 0, then clear the interval time, display the button and stop the game
+    if (time <= 0) {
+        clearInterval(timeInterval);
+        disableInput();
+        displayPlayAgainButton();
+    }
+
+    countdown.innerHTML = `${minutes}:${seconds}`;
+
+    time--;
+}
+
+// ######## CREATE PLAY AGAIN BUTTON AFTER TIMER  #########
+function displayPlayAgainButton() {
+    const playAgainButton = document.createElement("button");
+    playAgainButton.textContent = "Play Again";
+    playAgainButton.classList.add("play-again");
+    playAgainButton.addEventListener("click", resetGame);
+    document.body.appendChild(playAgainButton);
+}
+
+//######## DISABLE USER INPUT  #########
+function disableInput() {
+    // Disable any input elements or buttons to prevent further interaction
+    input.disabled = true;
+    guessButton.disabled = true;
+    hintButton.disabled = true;
+}
+
+// ######## GET RANDOM WORD FROM ARRAY #########
 function randomWord() {
     return answers[Math.floor(Math.random() * answers.length)];
 }
 
+// ######## RESTART THE GAME #########
 function resetGame() {
     secretWord = randomWord();
     chances = 0;
@@ -191,6 +224,19 @@ function resetGame() {
 
     hintUsedRows = [];
     displayedHintLetters = [];
+
+    // Start the countdown again
+    time = startingTime * 60;
+    timeInterval = setInterval(updateTimer, 1000);
+
+    const playAgainButton = document.querySelector(".play-again");
+    if (playAgainButton) {
+        playAgainButton.remove();
+    }
+
+    input.disabled = false;
+    guessButton.disabled = false;
+    hintButton.disabled = false;
 }
 
 /*
@@ -200,9 +246,8 @@ NOTES:
 
 2- Implement a box display instead of alert 
 
-3-Implement a timer
+3-Sync the timer with the game 
 
 4-Implement the keyboard
-
 
 */
