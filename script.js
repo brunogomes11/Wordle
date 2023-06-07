@@ -31,14 +31,11 @@ hintButton.addEventListener("click", function () {
         // Create an array to store the available hint letters
         const availableHintLetters = [];
 
-        //I NEED TO MAKE TO ONLY SHOW LETTERS THAT DOES NOT HAVE GREEN OR YELLOW
-        // Array.from(rows.children.contains("green yellow")).INNERTEXT OR .TEXTCONTENT
+        // const notHint = rows[currentRowIndex - 1].children;
+        // const test = notHint.classList.contains("yellow");
+        // console.log(test);
 
-        const notHint = rows[currentRowIndex - 1].children;
-        const test = notHint.classList.contains("yellow");
-        console.log(test);
-
-        // Loop through the secret word and add unique letters to the availableHintLetters array
+        //Loop through the secret word and add unique letters to the availableHintLetters array
         for (let i = 0; i < secretWord.length; i++) {
             if (!displayedHintLetters.includes(secretWord[i])) {
                 availableHintLetters.push(secretWord[i]);
@@ -91,20 +88,62 @@ guessButton.addEventListener("click", function () {
                 input.value = "";
                 matchWord(guess);
             } else {
-                alert("This word doesn't exist");
+                modal("This word doesn't exist");
                 input.value = "";
             }
         } else {
             //if less than 5 words, then show an alert to the user
-            alert("Only 5 letters word");
+            modal("Only 5 letters word");
         }
     } else {
         //try the game again, calling the reset function
-        alert("Try again!");
+        modal("Try again!");
         resetGame();
     }
 });
 
+//DISPLAY THE DIALOG INSTRUCTION WHEN THE GAME IS RUN AND CREATE A BUTTON TO OPEN INSTRUCTIONS AT ANYTIME
+const instructionButton = document.getElementById("instruction-button");
+
+instructionButton.addEventListener("click", function () {
+    const dialogInstructions = document.getElementById("instructions");
+    const iconButton = document.getElementById("icon-close");
+
+    dialogInstructions.showModal();
+    iconButton.addEventListener("click", function () {
+        dialogInstructions.close();
+    });
+});
+
+// ######## DIALOG BOX #########
+function modal(message) {
+    //Create elements
+    const dialog = document.createElement("dialog");
+    const div = document.createElement("div");
+    const closeBtn = document.createElement("button");
+
+    //Give a message and a button to close
+    div.textContent = message;
+    closeBtn.textContent = "Close";
+
+    //Add classes to elements for styling
+    dialog.classList.add("dialog");
+    closeBtn.classList.add("close-button");
+    div.classList.add("dialog-text");
+
+    //Append div and button to dialog and dialog to the document
+    dialog.append(div);
+    dialog.append(closeBtn);
+    document.body.appendChild(dialog);
+
+    //Display the dialog when function is called
+    dialog.showModal();
+
+    //Close the dialog box when the button close is clicked
+    closeBtn.addEventListener("click", function () {
+        dialog.close();
+    });
+}
 // ######## DISPLAY GUESS ON TILES #########
 function displayGuess(guessArray) {
     //Create a display guess function that takes the guess input from the player
