@@ -23,7 +23,7 @@ body {
 }
 .heading {
     text-align: center;
-    color: #d1495b;
+    color: #bfd7ea;
     font-family: "Bagel Fat One", cursive;
     font-size: 50px;
     margin: 0;
@@ -114,10 +114,13 @@ body {
 
 #input-section {
     display: flex;
-    justify-content: center;
-    gap: 10px;
-    text-align: center;
-    margin-top: 50px;
+    align-items: flex-start;
+}
+
+#inputButton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 #input {
@@ -127,22 +130,84 @@ body {
     border-radius: 10px;
     border: 1px solid black;
     height: 30px;
+    width: 200px;
+    margin-bottom: 10px;
 }
 
 /* Guess and Hint buttons */
 
-#buttons {
-    display: flex;
-    justify-content: center;
-    flex-direction: column;
-    row-gap: 10px;
-}
-
 .btn {
     width: 200px;
-    justify-content: center;
-    align-items: center;
+    margin-bottom: 10px;
+}
+
+#guessBtn {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 500px;
+    transition-property: background-color, border-color, color, box-shadow,
+        filter;
+    transition-duration: 0.3s;
+    border: 1px solid transparent;
+    letter-spacing: 2px;
+    min-width: 160px;
+    text-transform: uppercase;
+    white-space: normal;
+    font-weight: 700;
     text-align: center;
+
+    color: #fff;
+    background-color: #15883e;
+    height: 25px;
+}
+
+#guessBtn:hover {
+    background-color: #1db954;
+}
+
+#hintBtn {
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 500px;
+    transition-property: background-color, border-color, color, box-shadow,
+        filter;
+    transition-duration: 0.3s;
+    border: 1px solid transparent;
+    letter-spacing: 2px;
+    min-width: 160px;
+    text-transform: uppercase;
+    white-space: normal;
+    font-weight: 700;
+    text-align: center;
+
+    color: #fff;
+    background-color: #153280;
+    height: 25px;
+}
+
+#hintBtn:hover {
+    background-color: #1e51dd;
+}
+
+/* Play Again Dialog Box */
+#play-again {
+    overflow: auto;
+    height: 100px;
+    position: relative;
+    border: none !important;
+    border-radius: 10px;
+    background-color: #222e50;
+}
+
+#play-again-button {
+    position: absolute;
+    top: 50px;
 }
 
 /* Countdown Timer */
@@ -151,6 +216,7 @@ body {
     position: relative;
     width: 100px;
     height: 100px;
+    margin-left: 20px;
 }
 
 .base-timer__svg {
@@ -198,4 +264,27 @@ body {
     align-items: center;
     justify-content: center;
     font-size: 35px;
+}
+
+/* Animated Transition to display letters on tiles */
+
+/* Define the animation */
+@keyframes wavy-animation {
+    0% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+    100% {
+        transform: translateY(0);
+    }
+}
+
+/* Apply the animation to the tiles */
+.tile-transition {
+    animation-name: wavy-animation;
+    animation-duration: 1s;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
 }

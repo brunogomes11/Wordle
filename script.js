@@ -64,16 +64,24 @@ hintButton.addEventListener("click", function () {
 
 // ######## GUESS BUTTON #########
 guessButton.addEventListener("click", function () {
-    //When the button is pressed, get the input and make if statements to start playing the game
-    //Get the input value, make uppercase and split the word to create an array with each letter
+    // When the button is pressed, get the input and make if statements to start playing the game
+    // Get the input value, make it uppercase and split the word to create an array with each letter
     let guess = input.value.toUpperCase().split("");
 
-    //if the player try more than 6 times, the game is over
-    if (chances < 6) {
-        //if the players has less than 6 tries, then compare the lenght of the guess word, and make sure its is = to 5
+    // If the player has made 6 attempts, check if it's the correct word before ending the game
+    if (chances === 5) {
+        if (guess.join("").toLowerCase() === secretWord.toLowerCase()) {
+            matchWord(guess);
+            displayGuess(guess);
+        } else {
+            displayGuess(guess);
+            displayPlayAgainButton("YOU LOSE!!");
+        }
+    } else {
+        // If the player has less than 6 tries, then compare the length of the guess word and make sure it is equal to 5
         if (guess.length === 5) {
-            //if it is igual to 5, then display the guess on the tiles, clear the input and match the word with the right color
-            //Check if the guessed word is a valid word
+            // If it is equal to 5, then display the guess on the tiles, clear the input, and match the word with the right color
+            // Check if the guessed word is a valid word
             if (validWords.includes(guess.join("").toLowerCase())) {
                 // Remove the blue class from the previously selected random tile
                 const blueTile = rows[currentRowIndex].querySelector(".blue");
@@ -85,16 +93,11 @@ guessButton.addEventListener("click", function () {
                 matchWord(guess);
             } else {
                 modal("This word doesn't exist");
-                input.value = "";
             }
         } else {
-            //if less than 5 words, then show an alert to the user
-            modal("Only 5 letters word");
+            // If less than 5 letters, show an alert to the user
+            modal("Only 5-letter words are allowed");
         }
-    } else {
-        //try the game again, calling the reset function
-        modal("Try again!");
-        resetGame();
     }
 });
 
@@ -104,12 +107,27 @@ function displayGuess(guessArray) {
     //Loop through the guess word, and for each letter, assign it to the tile, increment the tile index to jump to the next one each time of the loop
     guessArray.forEach((letter) => {
         //rows element, incrementing every time the loop runs, passing the children element (tile) and increment as well, and asign the letter
-        rows[currentRowIndex].children[currentLetterIndex].textContent = letter;
+        const tile = rows[currentRowIndex].children[currentLetterIndex];
+
+        setTimeout(() => {
+            tile.textContent = letter;
+            tile.classList.add("tile-transition");
+        }, currentLetterIndex * 200); // Delay each letter by 200 milliseconds
+
         currentLetterIndex++;
     });
     //For the next guess, always start at index 0 and jump to the next row
     currentLetterIndex = 0;
     currentRowIndex++;
+
+    setTimeout(removeTransitionClass, guessArray.length * 400);
+}
+
+function removeTransitionClass() {
+    const tiles = document.querySelectorAll(".tile-transition");
+    tiles.forEach((tile) => {
+        tile.classList.remove("tile-transition");
+    });
 }
 
 // ######## MATCH WORDS WITH COLORS #########
@@ -117,10 +135,8 @@ function matchWord(guessArray) {
     //Create a function to match the word with the colors
     //Create a variable to pass the secret word, make it upper case and split into an array
     const answerArray = secretWord.toUpperCase().split("");
-
     //Create a variable to store an array of the rows, passing the chances, to make sure where the row is and assing to children element (tile)
     const rowTiles = Array.from(rows[chances].children);
-
     //Loop through the guesses word array
     answerArray.forEach((answerLetter, i) => {
         //create a varialbe to assing the guess index
@@ -129,27 +145,26 @@ function matchWord(guessArray) {
         const tileElement = rowTiles[i];
 
         //Compare the secret word letters with the guessed letters
-        if (answerLetter === guessLetter) {
-            //If TRUE then assing the green class to the tile element
-            tileElement.classList.add("green");
-        } else if (answerArray.includes(guessLetter)) {
-            //If the letter includes on somewhere on the secret word but its not on the rigth position, then assign the yellow class to the tile element
-            tileElement.classList.add("yellow");
-        }
+        setTimeout(() => {
+            if (answerLetter === guessLetter) {
+                //If TRUE then assing the green class to the tile element
+                tileElement.classList.add("green");
+            } else if (answerArray.includes(guessLetter)) {
+                //If the letter includes on somewhere on the secret word but its not on the rigth position, then assign the yellow class to the tile element
+                tileElement.classList.add("yellow");
+            }
+            //Create a variable to check if all the tiles has the green class
+            const isRowGreen = rowTiles.every((tile) =>
+                tile.classList.contains("green")
+            );
+            //if all the letters has the green tiles then the player win
+            if (isRowGreen) {
+                displayPlayAgainButton("YOU WIN!!!");
+            }
+        }, guessArray.length * 100);
     });
 
     chances++;
-
-    //Create a variable to check if all the tiles has the green class
-    const isRowGreen = rowTiles.every((tile) =>
-        tile.classList.contains("green")
-    );
-    //if all the letters has the green tiles then the player win
-
-    if (isRowGreen) {
-        modal("YOU WIN!!!");
-        resetGame();
-    }
 }
 
 //DISPLAY THE DIALOG INSTRUCTION WHEN THE GAME IS RUN AND CREATE A BUTTON TO OPEN INSTRUCTIONS AT ANYTIME
@@ -193,28 +208,35 @@ function modal(message) {
     closeBtn.addEventListener("click", function () {
         dialog.close();
     });
+    input.value = "";
+}
+
+// ######## CREATE PLAY AGAIN BUTTON AFTER TIMER AND AFTER 6 TRIES  #########
+const dialogPlayAgain = document.getElementById("play-again");
+let divPlayAgain = document.createElement("div");
+function displayPlayAgainButton(message) {
+    const playAgainButton = document.getElementById("play-again-button");
+
+    divPlayAgain.textContent = message;
+    divPlayAgain.classList.add("play-again-dialog");
+
+    dialogPlayAgain.append(divPlayAgain);
+
+    dialogPlayAgain.showModal();
+
+    playAgainButton.addEventListener("click", resetGame);
 }
 
 // ######## GET RANDOM WORD FROM ARRAY #########
 function randomWord() {
     return answers[Math.floor(Math.random() * answers.length)];
 }
-
-// ######## CREATE PLAY AGAIN BUTTON AFTER TIMER  #########
-const dialogPlayAgain = document.getElementById("play-again");
-function displayPlayAgainButton() {
-    const playAgainButton = document.getElementById("play-again-button");
-    playAgainButton.addEventListener("click", resetGame);
-
-    dialogPlayAgain.showModal();
-}
-
 //######## DISABLE USER INPUT  #########
 function disableInput() {
     // Disable any input elements or buttons to prevent further interaction
-    input.style.display = "none";
-    guessButton.style.display = "none";
-    hintButton.style.display = "none";
+    input.style.visibility = "hidden";
+    guessButton.style.visibility = "hidden";
+    hintButton.style.visibility = "hidden";
 }
 
 //######## ANIMATED COUNTDOWN TIMER  #########
@@ -287,7 +309,7 @@ function startTimer() {
 
             clearInterval(timerInterval);
             disableInput();
-            displayPlayAgainButton();
+            displayPlayAgainButton("Time is up!");
         }
     }, 1000);
 }
@@ -363,6 +385,7 @@ function resetTimer() {
 // ######## RESTART THE GAME #########
 function resetGame() {
     dialogPlayAgain.close();
+    divPlayAgain.textContent = "";
     secretWord = randomWord();
     chances = 0;
     currentRowIndex = 0;
@@ -386,18 +409,16 @@ function resetGame() {
         playAgainButton.remove();
     }
 
-    input.style.display = "block";
-    guessButton.style.display = "block";
-    hintButton.style.display = "block";
+    input.style.visibility = "visible";
+    guessButton.style.visibility = "visible";
+    hintButton.style.visibility = "visible";
 }
 
 /*
 NOTES:
 
-2-Implement the keyboard
+6- When I try 6 times and the word doenst match the secret world, show try again message -- HALF FIXED
 
-4- if the letter is green or yellow, then do not show on Hint
-
-6- When I try 6 times and the word doenst match the secret world, show try again message
+7- NOW I NEED TO MAKE SURE THAT DELAY FOR THE MESSAGE IS AFTER THE LETTERS IS DISPLAYED ON THE ROW
 
 */
