@@ -31,10 +31,6 @@ hintButton.addEventListener("click", function () {
         // Create an array to store the available hint letters
         const availableHintLetters = [];
 
-        // const notHint = rows[currentRowIndex - 1].children;
-        // const test = notHint.classList.contains("yellow");
-        // console.log(test);
-
         //Loop through the secret word and add unique letters to the availableHintLetters array
         for (let i = 0; i < secretWord.length; i++) {
             if (!displayedHintLetters.includes(secretWord[i])) {
@@ -102,48 +98,6 @@ guessButton.addEventListener("click", function () {
     }
 });
 
-//DISPLAY THE DIALOG INSTRUCTION WHEN THE GAME IS RUN AND CREATE A BUTTON TO OPEN INSTRUCTIONS AT ANYTIME
-const instructionButton = document.getElementById("instruction-button");
-
-instructionButton.addEventListener("click", function () {
-    const dialogInstructions = document.getElementById("instructions");
-    const iconButton = document.getElementById("icon-close");
-
-    dialogInstructions.showModal();
-    iconButton.addEventListener("click", function () {
-        dialogInstructions.close();
-    });
-});
-
-// ######## DIALOG BOX #########
-function modal(message) {
-    //Create elements
-    const dialog = document.createElement("dialog");
-    const div = document.createElement("div");
-    const closeBtn = document.createElement("button");
-
-    //Give a message and a button to close
-    div.textContent = message;
-    closeBtn.textContent = "Close";
-
-    //Add classes to elements for styling
-    dialog.classList.add("dialog");
-    closeBtn.classList.add("close-button");
-    div.classList.add("dialog-text");
-
-    //Append div and button to dialog and dialog to the document
-    dialog.append(div);
-    dialog.append(closeBtn);
-    document.body.appendChild(dialog);
-
-    //Display the dialog when function is called
-    dialog.showModal();
-
-    //Close the dialog box when the button close is clicked
-    closeBtn.addEventListener("click", function () {
-        dialog.close();
-    });
-}
 // ######## DISPLAY GUESS ON TILES #########
 function displayGuess(guessArray) {
     //Create a display guess function that takes the guess input from the player
@@ -193,58 +147,52 @@ function matchWord(guessArray) {
     //if all the letters has the green tiles then the player win
 
     if (isRowGreen) {
-        alert("you win");
+        modal("YOU WIN!!!");
         resetGame();
     }
 }
 
-// ####### TIMER #######
-const startingTime = 1;
-//Convert the time to seconds
-let time = startingTime * 60;
+//DISPLAY THE DIALOG INSTRUCTION WHEN THE GAME IS RUN AND CREATE A BUTTON TO OPEN INSTRUCTIONS AT ANYTIME
+const instructionButton = document.getElementById("instruction-button");
 
-//Get the element timer
-const countdown = document.getElementById("timer");
+instructionButton.addEventListener("click", function () {
+    const dialogInstructions = document.getElementById("instructions");
+    const iconButton = document.getElementById("icon-close");
 
-//Update the timer every second and store the interval time
-let timeInterval = setInterval(updateTimer, 1000);
+    dialogInstructions.showModal();
+    iconButton.addEventListener("click", function () {
+        dialogInstructions.close();
+    });
+});
 
-//Function called every second by setInterval
-function updateTimer() {
-    //Calculate the time
-    const minutes = Math.floor(time / 60);
-    let seconds = time % 60;
+// ######## DIALOG BOX #########
+function modal(message) {
+    //Create elements
+    const dialog = document.createElement("dialog");
+    const div = document.createElement("div");
+    const closeBtn = document.createElement("button");
 
-    //Formatting to seconds less than 10 have a zero for better visual representation
-    seconds = seconds < 10 ? "0" + seconds : seconds;
+    //Give a message and a button to close
+    div.textContent = message;
+    closeBtn.textContent = "Close";
 
-    //If the time reach 0, then clear the interval time, display the button and stop the game
-    if (time <= 0) {
-        clearInterval(timeInterval);
-        disableInput();
-        displayPlayAgainButton();
-    }
+    //Add classes to elements for styling
+    dialog.classList.add("dialog");
+    closeBtn.classList.add("close-button");
+    div.classList.add("dialog-text");
 
-    countdown.innerHTML = `${minutes}:${seconds}`;
+    //Append div and button to dialog and dialog to the document
+    dialog.append(div);
+    dialog.append(closeBtn);
+    document.body.appendChild(dialog);
 
-    time--;
-}
+    //Display the dialog when function is called
+    dialog.showModal();
 
-// ######## CREATE PLAY AGAIN BUTTON AFTER TIMER  #########
-function displayPlayAgainButton() {
-    const playAgainButton = document.createElement("button");
-    playAgainButton.textContent = "Play Again";
-    playAgainButton.classList.add("play-again");
-    playAgainButton.addEventListener("click", resetGame);
-    document.body.appendChild(playAgainButton);
-}
-
-//######## DISABLE USER INPUT  #########
-function disableInput() {
-    // Disable any input elements or buttons to prevent further interaction
-    input.disabled = true;
-    guessButton.disabled = true;
-    hintButton.disabled = true;
+    //Close the dialog box when the button close is clicked
+    closeBtn.addEventListener("click", function () {
+        dialog.close();
+    });
 }
 
 // ######## GET RANDOM WORD FROM ARRAY #########
@@ -252,8 +200,169 @@ function randomWord() {
     return answers[Math.floor(Math.random() * answers.length)];
 }
 
+// ######## CREATE PLAY AGAIN BUTTON AFTER TIMER  #########
+const dialogPlayAgain = document.getElementById("play-again");
+function displayPlayAgainButton() {
+    const playAgainButton = document.getElementById("play-again-button");
+    playAgainButton.addEventListener("click", resetGame);
+
+    dialogPlayAgain.showModal();
+}
+
+//######## DISABLE USER INPUT  #########
+function disableInput() {
+    // Disable any input elements or buttons to prevent further interaction
+    input.style.display = "none";
+    guessButton.style.display = "none";
+    hintButton.style.display = "none";
+}
+
+//######## ANIMATED COUNTDOWN TIMER  #########
+// Code from: https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/
+const FULL_DASH_ARRAY = 283;
+const WARNING_THRESHOLD = 10;
+const ALERT_THRESHOLD = 5;
+
+const COLOR_CODES = {
+    info: {
+        color: "green",
+    },
+    warning: {
+        color: "orange",
+        threshold: WARNING_THRESHOLD,
+    },
+    alert: {
+        color: "red",
+        threshold: ALERT_THRESHOLD,
+    },
+};
+
+const TIME_LIMIT = 60;
+let timePassed = 0;
+let timeLeft = TIME_LIMIT;
+let timerInterval = null;
+let remainingPathColor = COLOR_CODES.info.color;
+
+document.getElementById("app").innerHTML = `
+<div class="base-timer">
+  <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g class="base-timer__circle">
+      <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+      <path
+        id="base-timer-path-remaining"
+        stroke-dasharray="283"
+        class="base-timer__path-remaining ${remainingPathColor}"
+        d="
+          M 50, 50
+          m -45, 0
+          a 45,45 0 1,0 90,0
+          a 45,45 0 1,0 -90,0
+        "
+      ></path>
+    </g>
+  </svg>
+  <span id="base-timer-label" class="base-timer__label">${formatTime(
+      timeLeft
+  )}</span>
+</div>
+`;
+
+startTimer();
+
+function onTimesUp() {
+    clearInterval(timerInterval);
+}
+
+function startTimer() {
+    timerInterval = setInterval(() => {
+        timePassed = timePassed += 1;
+        timeLeft = TIME_LIMIT - timePassed;
+        document.getElementById("base-timer-label").innerHTML =
+            formatTime(timeLeft);
+        setCircleDasharray();
+        setRemainingPathColor(timeLeft);
+
+        if (timeLeft === 0) {
+            onTimesUp();
+
+            clearInterval(timerInterval);
+            disableInput();
+            displayPlayAgainButton();
+        }
+    }, 1000);
+}
+
+function formatTime(time) {
+    const minutes = Math.floor(time / 60);
+    let seconds = time % 60;
+
+    if (seconds < 10) {
+        seconds = `0${seconds}`;
+    }
+
+    return `${minutes}:${seconds}`;
+}
+
+function setRemainingPathColor(timeLeft) {
+    const { alert, warning, info } = COLOR_CODES;
+    if (timeLeft <= alert.threshold) {
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.remove(warning.color);
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.add(alert.color);
+    } else if (timeLeft <= warning.threshold) {
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.remove(info.color);
+        document
+            .getElementById("base-timer-path-remaining")
+            .classList.add(warning.color);
+    }
+}
+
+function calculateTimeFraction() {
+    const rawTimeFraction = timeLeft / TIME_LIMIT;
+    return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+}
+
+function setCircleDasharray() {
+    const circleDasharray = `${(
+        calculateTimeFraction() * FULL_DASH_ARRAY
+    ).toFixed(0)} 283`;
+    document
+        .getElementById("base-timer-path-remaining")
+        .setAttribute("stroke-dasharray", circleDasharray);
+}
+
+//https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/
+
+// ######## RESTART THE TIMER #########
+
+function resetTimer() {
+    clearInterval(timerInterval);
+    timePassed = 0;
+    timeLeft = TIME_LIMIT;
+    remainingPathColor = COLOR_CODES.info.color;
+
+    document.getElementById("base-timer-label").innerHTML =
+        formatTime(timeLeft);
+    setCircleDasharray();
+    setRemainingPathColor(timeLeft);
+
+    // Remove all color classes and add the info color class to reset the color
+    const pathRemaining = document.getElementById("base-timer-path-remaining");
+    pathRemaining.classList.remove(COLOR_CODES.warning.color);
+    pathRemaining.classList.remove(COLOR_CODES.alert.color);
+    pathRemaining.classList.add(COLOR_CODES.info.color);
+
+    startTimer(); // Restart the timer
+}
+
 // ######## RESTART THE GAME #########
 function resetGame() {
+    dialogPlayAgain.close();
     secretWord = randomWord();
     chances = 0;
     currentRowIndex = 0;
@@ -270,34 +379,25 @@ function resetGame() {
     hintUsedRows = [];
     displayedHintLetters = [];
 
-    //Clear the time, so it does not run twice
-    clearInterval(timeInterval);
-
-    // Start the countdown again
-    time = startingTime * 60;
-    timeInterval = setInterval(updateTimer, 1000);
+    resetTimer();
 
     const playAgainButton = document.querySelector(".play-again");
     if (playAgainButton) {
         playAgainButton.remove();
     }
 
-    input.disabled = false;
-    guessButton.disabled = false;
-    hintButton.disabled = false;
+    input.style.display = "block";
+    guessButton.style.display = "block";
+    hintButton.style.display = "block";
 }
 
 /*
 NOTES:
 
-1- Implement a box display (dialog) instead of alert 
-
 2-Implement the keyboard
-
-3-If word already displayed, dont let the player input again
 
 4- if the letter is green or yellow, then do not show on Hint
 
-5- Implement a good css timer
+6- When I try 6 times and the word doenst match the secret world, show try again message
 
 */
