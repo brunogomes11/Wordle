@@ -6,6 +6,9 @@ const rows = document.querySelectorAll(".row");
 const input = document.getElementById("input");
 const guessButton = document.getElementById("guessBtn");
 const hintButton = document.getElementById("hintBtn");
+const instructionButton = document.getElementById("instruction-button");
+const dialogPlayAgain = document.getElementById("play-again");
+const textPlayAgain = document.getElementById("text-play-again");
 
 //Create a variable to start the chances at 0, and then build it up as the players keeps trying different words
 let chances = 0;
@@ -13,6 +16,8 @@ let chances = 0;
 let currentRowIndex = 0;
 //Create a variable to keep track of a letter
 let currentLetterIndex = 0;
+//Create a variable to keep track of winnning rounds
+let winCount = 0;
 
 // Assign a variable to generate a random word
 let secretWord = randomWord();
@@ -26,11 +31,10 @@ let displayedHintLetters = [];
 
 // ######## HINT BUTTON #########
 hintButton.addEventListener("click", function () {
+    // Create an array to store the available hint letters
+    const availableHintLetters = [];
     // Check if hint has already been used for the current row
     if (!hintUsedRows.includes(currentRowIndex)) {
-        // Create an array to store the available hint letters
-        const availableHintLetters = [];
-
         //Loop through the secret word and add unique letters to the availableHintLetters array
         for (let i = 0; i < secretWord.length; i++) {
             if (!displayedHintLetters.includes(secretWord[i])) {
@@ -71,8 +75,8 @@ guessButton.addEventListener("click", function () {
     // If the player has made 6 attempts, check if it's the correct word before ending the game
     if (chances === 5) {
         if (guess.join("").toLowerCase() === secretWord.toLowerCase()) {
-            matchWord(guess);
             displayGuess(guess);
+            matchWord(guess);
         } else {
             displayGuess(guess);
             displayPlayAgainButton("YOU LOSE!!");
@@ -137,6 +141,7 @@ function matchWord(guessArray) {
     const answerArray = secretWord.toUpperCase().split("");
     //Create a variable to store an array of the rows, passing the chances, to make sure where the row is and assing to children element (tile)
     const rowTiles = Array.from(rows[chances].children);
+
     //Loop through the guesses word array
     answerArray.forEach((answerLetter, i) => {
         //create a varialbe to assing the guess index
@@ -168,8 +173,6 @@ function matchWord(guessArray) {
 }
 
 //DISPLAY THE DIALOG INSTRUCTION WHEN THE GAME IS RUN AND CREATE A BUTTON TO OPEN INSTRUCTIONS AT ANYTIME
-const instructionButton = document.getElementById("instruction-button");
-
 instructionButton.addEventListener("click", function () {
     const dialogInstructions = document.getElementById("instructions");
     const iconButton = document.getElementById("icon-close");
@@ -214,11 +217,8 @@ function modal(message) {
     });
     input.value = "";
 }
-let winCount = 0;
 
 // ######## CREATE PLAY AGAIN BUTTON AFTER TIMER AND AFTER 6 TRIES  #########
-const dialogPlayAgain = document.getElementById("play-again");
-const textPlayAgain = document.getElementById("text-play-again");
 
 function displayPlayAgainButton(message) {
     const playAgainButton = document.getElementById("play-again-button");
@@ -398,6 +398,7 @@ function resetGame() {
 
     textPlayAgain.textContent = "";
     secretWord = randomWord();
+    console.log(secretWord);
     chances = 0;
     currentRowIndex = 0;
     currentLetterIndex = 0;
@@ -424,12 +425,3 @@ function resetGame() {
     guessButton.style.visibility = "visible";
     hintButton.style.visibility = "visible";
 }
-
-/*
-NOTES:
-
-6- When I try 6 times and the word doenst match the secret world, show try again message -- HALF FIXED
-
-7- NOW I NEED TO MAKE SURE THAT DELAY FOR THE MESSAGE IS AFTER THE LETTERS IS DISPLAYED ON THE ROW
-
-*/
