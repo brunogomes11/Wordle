@@ -185,6 +185,8 @@ function modal(message) {
     //Create elements
     const dialog = document.createElement("dialog");
     const div = document.createElement("div");
+    dialog.style.display = "flex";
+
     const closeBtn = document.createElement("button");
 
     //Give a message and a button to close
@@ -206,22 +208,29 @@ function modal(message) {
 
     //Close the dialog box when the button close is clicked
     closeBtn.addEventListener("click", function () {
+        dialog.style.display = "none";
+        div.textContent = "";
         dialog.close();
     });
     input.value = "";
 }
+let winCount = 0;
 
 // ######## CREATE PLAY AGAIN BUTTON AFTER TIMER AND AFTER 6 TRIES  #########
 const dialogPlayAgain = document.getElementById("play-again");
-let divPlayAgain = document.createElement("div");
+const textPlayAgain = document.getElementById("text-play-again");
+
 function displayPlayAgainButton(message) {
     const playAgainButton = document.getElementById("play-again-button");
 
-    divPlayAgain.textContent = message;
-    divPlayAgain.classList.add("play-again-dialog");
+    textPlayAgain.textContent = message;
 
-    dialogPlayAgain.append(divPlayAgain);
-
+    if (message === "YOU WIN!!!") {
+        winCount++;
+        message += " Win count: " + winCount;
+        document.getElementById("win-count").textContent = "Wins: " + winCount;
+    }
+    dialogPlayAgain.style.display = "flex";
     dialogPlayAgain.showModal();
 
     playAgainButton.addEventListener("click", resetGame);
@@ -385,7 +394,9 @@ function resetTimer() {
 // ######## RESTART THE GAME #########
 function resetGame() {
     dialogPlayAgain.close();
-    divPlayAgain.textContent = "";
+    dialogPlayAgain.style.display = "none";
+
+    textPlayAgain.textContent = "";
     secretWord = randomWord();
     chances = 0;
     currentRowIndex = 0;

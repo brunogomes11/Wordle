@@ -1,8 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Bagel+Fat+One&display=swap");
-
 * {
     box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+    font-family: nintendo;
+    src: url("fonts/snes-26537/SnesItalic-1G9Be.ttf");
+}
+
+@font-face {
+    font-family: game;
+    src: url("fonts/game-played-31380/GamePlayed-vYL7.ttf");
 }
 
 body {
@@ -13,6 +20,7 @@ body {
     min-height: 100%;
     margin: 0;
     padding: 1em;
+    font-family: game;
 }
 
 /* Main header */
@@ -21,11 +29,12 @@ body {
     flex-direction: column;
     align-items: center;
 }
+
 .heading {
     text-align: center;
     color: #bfd7ea;
-    font-family: "Bagel Fat One", cursive;
-    font-size: 50px;
+    font-family: nintendo;
+    font-size: 80px;
     margin: 0;
 }
 
@@ -43,6 +52,7 @@ body {
     justify-content: center;
     align-items: center;
     text-align: center;
+    margin-left: 160px;
 }
 
 #image-button {
@@ -50,15 +60,71 @@ body {
     width: 50px;
 }
 
+/* Wins count and instruction icon container */
+
+#instruction-win-container {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#win-count {
+    font-size: 30px;
+    font-family: game;
+    color: #306b34;
+}
+
 /* Instruction Dialog Box */
 #instructions {
     background-color: #333;
+    font-family: game;
+    border-radius: 10px;
+    border: none;
+    color: #bfd7ea;
+}
+
+#icon-close {
+    background-color: #c4121e;
+    border: none;
+    border-radius: 500px;
+    cursor: pointer;
+    height: 30px;
+    width: 30px;
+}
+
+#icon-close:hover {
+    background-color: #e5323e;
+}
+
+#instructions-heading {
+    text-align: center;
+}
+
+#content-instructions {
+    /* display: flex; */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+li {
+    margin: 10px 0;
+    color: #ccc;
+    list-style-type: square;
+}
+#examples {
+    text-align: center;
+}
+
+#p-examples {
+    font-size: 30px;
 }
 
 .example-row {
     display: flex;
     gap: 10px;
     margin: 5px auto;
+    justify-content: center;
 }
 
 .example-tile {
@@ -99,7 +165,7 @@ body {
 }
 
 .green {
-    background-color: green;
+    background-color: #15883e;
 }
 
 .yellow {
@@ -107,7 +173,7 @@ body {
 }
 
 .blue {
-    background-color: blue;
+    background-color: #153280;
 }
 
 /* Player's input guess */
@@ -132,6 +198,20 @@ body {
     height: 30px;
     width: 200px;
     margin-bottom: 10px;
+    transition: box-shadow 100ms ease-in, border 100ms ease-in,
+        background-color 100ms ease-in;
+    border: 2px solid #dee1e2;
+    color: rgb(14, 14, 16);
+    background: #dee1e2;
+}
+
+#input:hover {
+    border-color: #ccc;
+}
+
+#input:focus {
+    border-color: #9147ff;
+    background: #fff;
 }
 
 /* Guess and Hint buttons */
@@ -195,19 +275,101 @@ body {
     background-color: #1e51dd;
 }
 
-/* Play Again Dialog Box */
-#play-again {
-    overflow: auto;
-    height: 100px;
-    position: relative;
+/* Modal dialog for less than 5 letters and word not in the list */
+
+.dialog {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 250px;
     border: none !important;
     border-radius: 10px;
     background-color: #222e50;
+    font-size: 20px;
+    color: #ff5a5f;
+    padding: 10px;
+}
+
+.close-button {
+    justify-content: center;
+    font-size: 20px;
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 500px;
+    transition-property: background-color, border-color, color, box-shadow,
+        filter;
+    transition-duration: 0.3s;
+    border: 1px solid transparent;
+    letter-spacing: 2px;
+    min-width: 160px;
+    text-transform: uppercase;
+    white-space: normal;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background-color: #c4121e;
+    height: 38px;
+}
+
+.close-button:hover {
+    background-color: #e62633;
+}
+.dialog-text {
+    text-align: center;
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+/* Play Again Dialog Box */
+#play-again {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    width: 250px;
+    border: none !important;
+    border-radius: 10px;
+    background-color: #222e50;
+    font-size: 30px;
+    color: #ff5a5f;
+    padding: 10px;
+}
+
+#text-play-again {
+    margin-top: 0;
 }
 
 #play-again-button {
-    position: absolute;
-    top: 50px;
+    justify-content: center;
+    font-size: 20px;
+    display: inline-block;
+    outline: none;
+    cursor: pointer;
+    font-size: 14px;
+    line-height: 1;
+    border-radius: 500px;
+    transition-property: background-color, border-color, color, box-shadow,
+        filter;
+    transition-duration: 0.3s;
+    border: 1px solid transparent;
+    letter-spacing: 2px;
+    min-width: 160px;
+    text-transform: uppercase;
+    white-space: normal;
+    font-weight: 700;
+    text-align: center;
+    color: #fff;
+    background-color: #15883e;
+    height: 38px;
+}
+
+#play-again-button:hover {
+    background-color: #1db954;
 }
 
 /* Countdown Timer */
@@ -263,7 +425,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 35px;
+    font-size: 30px;
+    color: #ff5a5f;
 }
 
 /* Animated Transition to display letters on tiles */
