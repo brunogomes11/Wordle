@@ -2,6 +2,8 @@
 
 ## Wordle Game adaptation created by Bruno Gomes
 
+<img src="img/game.png" width="358" height="751">
+
 Welcome to our captivating web-based game where players embark on an exciting journey of guessing a secret 5-letter word. Prepare yourself for a thrilling experience as you immerse in our interactive interface, providing a seamless gameplay environment.
 
 In this intriguing game, you can crack the hidden word by strategically making guesses. Each guess will be evaluated, and the coloured tiles accompanying each letter will provide valuable feedback on the accuracy of your guess. Pay close attention to the colours, which are crucial to unravelling the mystery.
