@@ -44,7 +44,7 @@ Start playing now and see if you can unveil the secret word that awaits your dis
    * **Timer Functionality**: The game incorporates a countdown timer to limit the time for the player to make guesses. The countdown timer was created by [https://css-tricks.com/](https://css-tricks.com/how-to-create-an-animated-countdown-timer-with-html-css-and-javascript/) 
    * **Error Handling**: The code includes error handling to handle incorrect inputs or edge cases. This ensures the game functions properly even if the player makes invalid guesses or encounters unexpected situations.
 3. **CSS Styling**: The CSS code includes styles for various elements such as buttons, tiles, countdown timer, and dialog boxes that display messages, instructions, and the play again button. It defines classes like "green", "yellow", and "blue" to apply different colours to the tiles based on the correctness of the guessed letters and apply animations and transitions.
-    - Colours used from [https://coolors.co/](https://coolors.co/306b34-222e50-573112-bfd7ea-ff5a5f) :
+    - Colours used from [Coolors](https://coolors.co/306b34-222e50-573112-bfd7ea-ff5a5f) :
         - ![#573112](https://placehold.co/15x15/573112/573112.png) `#573112`
         - ![#306B34](https://placehold.co/15x15/306B34/306B34.png) `#306B34`
         - ![#222E50](https://placehold.co/15x15/222E50/222E50.png) `#222E50`
