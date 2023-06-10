@@ -1,4 +1,4 @@
-# Tick Tock Wordle
+# 	:stopwatch: Tick Tock Wordle	:stopwatch:
 
 ## Wordle Game adaptation created by Bruno Gomes
 
